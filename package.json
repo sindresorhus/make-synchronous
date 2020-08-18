@@ -1,0 +1,47 @@
+{
+	"name": "make-synchronous",
+	"version": "0.0.0",
+	"description": "Make an asynchronous function synchronous",
+	"license": "MIT",
+	"repository": "sindresorhus/make-synchronous",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "https://sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=12"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"function",
+		"synchronous",
+		"sync",
+		"block",
+		"main",
+		"thread",
+		"deasync",
+		"fiber",
+		"asynchronous",
+		"async"
+	],
+	"dependencies": {
+		"subsume": "^3.0.0",
+		"type-fest": "^0.16.0"
+	},
+	"devDependencies": {
+		"ava": "^2.4.0",
+		"delay": "^4.4.0",
+		"in-range": "^2.0.0",
+		"time-span": "^4.0.0",
+		"tsd": "^0.13.1",
+		"xo": "^0.33.0"
+	}
+}
