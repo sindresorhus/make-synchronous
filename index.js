@@ -35,7 +35,11 @@ module.exports = function_ => {
 		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['-'], {
 			input,
 			encoding: 'utf8',
-			maxBuffer: HUNDRED_MEGABYTES
+			maxBuffer: HUNDRED_MEGABYTES,
+			env: {
+				...process.env,
+				ELECTRON_RUN_AS_NODE: '1'
+			}
 		});
 
 		if (subprocessError) {
