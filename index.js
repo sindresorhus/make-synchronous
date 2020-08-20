@@ -5,7 +5,7 @@ const Subsume = require('subsume');
 
 const HUNDRED_MEGABYTES = 1000 * 1000 * 100;
 
-module.exports = function_ => {
+module.exports = (function_, execPath = process.execPath) => {
 	return (...arguments_) => {
 		const serializedArguments = v8.serialize(arguments_).toString('hex');
 		const subsume = new Subsume();
@@ -32,7 +32,7 @@ module.exports = function_ => {
 			})();
 		`;
 
-		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['-'], {
+		const { error: subprocessError, stdout, stderr } = childProcess.spawnSync(execPath, ['-'], {
 			input,
 			encoding: 'utf8',
 			maxBuffer: HUNDRED_MEGABYTES
@@ -42,7 +42,7 @@ module.exports = function_ => {
 			throw subprocessError;
 		}
 
-		const {data, rest} = subsume.parse(stdout);
+		const { data, rest } = subsume.parse(stdout);
 
 		process.stdout.write(rest);
 		process.stderr.write(stderr);
@@ -51,7 +51,7 @@ module.exports = function_ => {
 			return;
 		}
 
-		const {error, result} = v8.deserialize(Buffer.from(data, 'hex'));
+		const { error, result } = v8.deserialize(Buffer.from(data, 'hex'));
 
 		if (error) {
 			throw error;
