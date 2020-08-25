@@ -39,7 +39,7 @@ Returns a wrapped version of the given async function which executes synchronous
 
 The given function is executed in a subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use either `require(…)` or `await import(…)` in the function body.
 
-It uses the V8 serialization API transfer arguments, return values, errors between the subprocess and the current process. It supports most values, but not functions and symbols.
+It uses the V8 serialization API to transfer arguments, return values, errors between the subprocess and the current process. It supports most values, but not functions and symbols.
 
 ## Related
 
