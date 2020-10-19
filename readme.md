@@ -6,7 +6,7 @@
 
 The benefit of this package over packages like [`deasync`](https://github.com/abbr/deasync) is that this one is not a native Node.js addon (which comes with a lot of problems). Instead, this package executes the given function synchronously in a subprocess.
 
-Works in Node.js only, not the browser.
+This package works in Node.js only, not the browser.
 
 ## Install
 
