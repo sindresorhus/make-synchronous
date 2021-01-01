@@ -1,4 +1,4 @@
-# make-synchronous [![Build Status](https://travis-ci.com/sindresorhus/make-synchronous.svg?branch=master)](https://travis-ci.com/github/sindresorhus/make-synchronous)
+# make-synchronous
 
 > Make an asynchronous function synchronous
 
