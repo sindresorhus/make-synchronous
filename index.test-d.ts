@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import makeSynchronous = require('.');
+import makeSynchronous from './index.js';
 
 const fn = makeSynchronous(async (number: number) => number * 2);
 

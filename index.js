@@ -1,18 +1,20 @@
-'use strict';
-const childProcess = require('child_process');
-const v8 = require('v8');
-const Subsume = require('subsume');
+import {Buffer} from 'node:buffer';
+import childProcess from 'node:child_process';
+import v8 from 'node:v8';
+import process from 'node:process';
+import Subsume from 'subsume';
 
 const HUNDRED_MEGABYTES = 1000 * 1000 * 100;
 
-module.exports = function_ => {
+export default function makeSynchronous(function_) {
 	return (...arguments_) => {
 		const serializedArguments = v8.serialize(arguments_).toString('hex');
 		const subsume = new Subsume();
 
+		// TODO: Use top-level await here when targeting Node.js 14.
 		const input = `
-			const v8 = require('v8');
-			const Subsume = require('subsume');
+			import v8 from 'node:v8';
+			import Subsume from 'subsume';
 
 			const subsume = new Subsume('${subsume.id}');
 
@@ -32,14 +34,14 @@ module.exports = function_ => {
 			})();
 		`;
 
-		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['-'], {
+		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['--input-type=module', '-'], {
 			input,
 			encoding: 'utf8',
 			maxBuffer: HUNDRED_MEGABYTES,
 			env: {
 				...process.env,
-				ELECTRON_RUN_AS_NODE: '1'
-			}
+				ELECTRON_RUN_AS_NODE: '1',
+			},
 		});
 
 		if (subprocessError) {
@@ -63,4 +65,4 @@ module.exports = function_ => {
 
 		return result;
 	};
-};
+}

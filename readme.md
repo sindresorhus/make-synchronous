@@ -10,17 +10,17 @@ This package works in Node.js only, not the browser.
 
 ## Install
 
-```
-$ npm install make-synchronous
+```sh
+npm install make-synchronous
 ```
 
 ## Usage
 
 ```js
-const makeSynchronous = require('make-synchronous');
+import makeSynchronous from 'make-synchronous';
 
 const fn = makeSynchronous(async number => {
-	const delay = require('delay');
+	const {default: delay} = await import('delay');
 
 	await delay(100);
 
@@ -37,7 +37,7 @@ console.log(fn(2));
 
 Returns a wrapped version of the given async function which executes synchronously. This means no other code will execute (not even async code) until the given async function is done.
 
-The given function is executed in a subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use either `require(…)` or `await import(…)` in the function body.
+The given function is executed in a subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
 
 It uses the V8 serialization API to transfer arguments, return values, errors between the subprocess and the current process. It supports most values, but not functions and symbols.
 

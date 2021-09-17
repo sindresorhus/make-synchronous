@@ -1,14 +1,15 @@
-import {serial as test} from 'ava';
+import test from 'ava';
 import timeSpan from 'time-span';
 import inRange from 'in-range';
-import makeSynchronous from '.';
+import makeSynchronous from './index.js';
 
-test('main', t => {
+test.serial('main', t => {
 	const fixture = '🦄';
 	const end = timeSpan();
 
 	const result = makeSynchronous(async fixture => {
-		const delay = require('delay');
+		// eslint-disable-next-line node/no-unsupported-features/es-syntax
+		const {default: delay} = await import('delay');
 
 		await delay(200);
 
@@ -19,7 +20,7 @@ test('main', t => {
 	t.is(result, fixture);
 });
 
-test('error', t => {
+test.serial('error', t => {
 	t.throws(
 		() => {
 			makeSynchronous(async () => {
@@ -28,7 +29,7 @@ test('error', t => {
 		},
 		{
 			instanceOf: TypeError,
-			message: 'unicorn'
-		}
+			message: 'unicorn',
+		},
 	);
 });

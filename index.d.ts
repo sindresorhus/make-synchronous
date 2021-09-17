@@ -1,7 +1,7 @@
 import {AsyncReturnType} from 'type-fest';
 
 // TODO: Move these to https://github.com/sindresorhus/type-fest
-type AsyncFunction = (...args: any[]) => Promise<unknown>;
+type AnyAsyncFunction = (...args: any[]) => Promise<unknown | void>;
 type ReplaceReturnType<T extends (...arguments_: any) => unknown, NewReturnType> = (...arguments_: Parameters<T>) => NewReturnType;
 
 /**
@@ -13,10 +13,10 @@ It uses the V8 serialization API to transfer arguments, return values, errors be
 
 @example
 ```
-import makeSynchronous = require('make-synchronous');
+import makeSynchronous from 'make-synchronous';
 
 const fn = makeSynchronous(async number => {
-	const delay = require('delay');
+	const {default: delay} = await import('delay');
 
 	await delay(100);
 
@@ -27,6 +27,4 @@ console.log(fn(2));
 //=> 4
 ```
 */
-declare function makeSynchronous<T extends AsyncFunction>(asyncFunction: T): ReplaceReturnType<T, AsyncReturnType<T>>;
-
-export = makeSynchronous;
+export default function makeSynchronous<T extends AnyAsyncFunction>(asyncFunction: T): ReplaceReturnType<T, AsyncReturnType<T>>;
