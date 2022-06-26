@@ -43,4 +43,5 @@ It uses the V8 serialization API to transfer arguments, return values, errors be
 
 ## Related
 
+- [make-asynchronous](https://github.com/sindresorhus/make-asynchronous) - Make a synchronous function asynchronous by running it in a worker
 - [sleep-synchronously](https://github.com/sindresorhus/sleep-synchronously) - Block the main thread for a given amount of time
