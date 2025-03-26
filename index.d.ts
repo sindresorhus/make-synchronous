@@ -1,7 +1,7 @@
-import {AsyncReturnType} from 'type-fest';
+import type {AsyncReturnType} from 'type-fest';
 
 // TODO: Move these to https://github.com/sindresorhus/type-fest
-type AnyAsyncFunction = (...args: any[]) => Promise<unknown | void>;
+type AnyAsyncFunction = (...argumentsList: any[]) => Promise<unknown | void>;
 type ReplaceReturnType<T extends (...arguments_: any) => unknown, NewReturnType> = (...arguments_: Parameters<T>) => NewReturnType;
 
 /**

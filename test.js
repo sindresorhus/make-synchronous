@@ -7,7 +7,6 @@ test.serial('main', t => {
 	const fixture = '🦄';
 
 	const asynchronousFunction = async fixture => {
-		// eslint-disable-next-line node/no-unsupported-features/es-syntax
 		const {default: delay} = await import('delay');
 
 		await delay(200);
