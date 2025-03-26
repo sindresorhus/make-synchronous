@@ -35,7 +35,7 @@
 		"async"
 	],
 	"dependencies": {
-		"subsume": "^4.0.0",
+		"make-synchronized": "^0.7.1",
 		"type-fest": "^2.3.3"
 	},
 	"devDependencies": {
