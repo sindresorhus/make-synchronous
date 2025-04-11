@@ -27,11 +27,19 @@ function makeSynchronous(function_) {
 
 	function createWorker() {
 		if (!cache) {
-			const worker = new Worker(`
-				import setupWorker from ${JSON.stringify(import.meta.url)};
+			const code = `
+				import(${JSON.stringify(import.meta.url)})
+					.then(({default: setupWorker}) => setupWorker(${function_}));
+			`;
 
-				setupWorker(${function_});
-			`, {
+			// TODO: Use this one when targeting Node.js 20.
+			// const code = `
+			// 	import setupWorker from ${JSON.stringify(import.meta.url)};
+
+			// 	setupWorker(${function_});
+			// `;
+
+			const worker = new Worker(code, {
 				eval: true,
 				workerData: {
 					[IS_WORKER_MARK]: true,
