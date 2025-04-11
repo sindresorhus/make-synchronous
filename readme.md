@@ -4,7 +4,7 @@
 
 **This is the wrong tool for most tasks!** Prefer using async APIs whenever possible.
 
-The benefit of this package over packages like [`deasync`](https://github.com/abbr/deasync) is that this one is not a native Node.js addon (which comes with a lot of problems). Instead, this package executes the given function synchronously in a [`worker`](https://nodejs.org/docs/latest/api/worker_threads.html) or [`subprocess`](https://nodejs.org/docs/latest/api/child_process.html).
+The benefit of this package over packages like [`deasync`](https://github.com/abbr/deasync) is that this one is not a native Node.js addon (which comes with a lot of problems). Instead, this package executes the given function synchronously in a [`worker`](https://nodejs.org/api/worker_threads.html) or [`subprocess`](https://nodejs.org/api/child_process.html).
 
 This package works in Node.js only, not the browser.
 
