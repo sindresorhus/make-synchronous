@@ -11,7 +11,6 @@ export default function makeSynchronous(function_) {
 		const serializedArguments = v8.serialize(arguments_).toString('hex');
 		const subsume = new Subsume();
 
-		// TODO: Use top-level await here when targeting Node.js 14.
 		const input = `
 			import v8 from 'node:v8';
 			import Subsume from 'subsume';
@@ -23,15 +22,13 @@ export default function makeSynchronous(function_) {
 				process.stdout.write(subsume.compose(serialized));
 			};
 
-			(async () => {
-				try {
-					const arguments_ = v8.deserialize(Buffer.from('${serializedArguments}', 'hex'));
-					const result = await (${function_})(...arguments_);
-					send({result});
-				} catch (error) {
-					send({error});
-				}
-			})();
+			try {
+				const arguments_ = v8.deserialize(Buffer.from('${serializedArguments}', 'hex'));
+				const result = await (${function_})(...arguments_);
+				send({result});
+			} catch (error) {
+				send({error});
+			}
 		`;
 
 		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['--input-type=module', '-'], {
