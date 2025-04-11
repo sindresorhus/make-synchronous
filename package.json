@@ -16,7 +16,7 @@
 			"types": "./index.d.ts",
 			"default": "./worker.js"
 		},
-		"./childprocess": {
+		"./subprocess": {
 			"types": "./index.d.ts",
 			"default": "./index.js"
 		}
