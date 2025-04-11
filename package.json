@@ -11,7 +11,16 @@
 		"url": "https://sindresorhus.com"
 	},
 	"type": "module",
-	"exports": "./index.js",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./worker.js"
+		},
+		"./childprocess": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		}
+	},
 	"engines": {
 		"node": ">=20.0.0"
 	},
@@ -35,7 +44,7 @@
 		"async"
 	],
 	"dependencies": {
-		"make-synchronized": "^0.7.1",
+		"subsume": "^4.0.0",
 		"type-fest": "^4.38.0"
 	},
 	"devDependencies": {
