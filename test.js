@@ -1,8 +1,8 @@
 import test from 'ava';
 import timeSpan from 'time-span';
 import inRange from 'in-range';
-import makeSynchronousByWorker from './worker.js';
-import makeSynchronousByChildprocess from './index.js';
+import makeSynchronousByChildprocess from './subprocess.js';
+import makeSynchronousByWorker from './index.js';
 
 for (const {type, makeSynchronous} of [
 	{type: 'childprocess', makeSynchronous: makeSynchronousByChildprocess},

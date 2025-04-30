@@ -14,13 +14,14 @@
 	"exports": {
 		".": {
 			"types": "./index.d.ts",
-			"default": "./worker.js"
+			"default": "./index.js"
 		},
 		"./subprocess": {
 			"types": "./index.d.ts",
-			"default": "./index.js"
+			"default": "./subprocess.js"
 		}
 	},
+	"sideEffects": false,
 	"engines": {
 		"node": ">=20"
 	},
@@ -29,7 +30,7 @@
 	},
 	"files": [
 		"index.js",
-		"worker.js",
+		"subprocess.js",
 		"index.d.ts"
 	],
 	"keywords": [
@@ -47,14 +48,14 @@
 	],
 	"dependencies": {
 		"subsume": "^4.0.0",
-		"type-fest": "^4.38.0"
+		"type-fest": "^4.40.1"
 	},
 	"devDependencies": {
 		"ava": "^6.2.0",
 		"delay": "^6.0.0",
 		"in-range": "^3.0.0",
 		"time-span": "^5.1.0",
-		"tsd": "^0.31.2",
+		"tsd": "^0.32.0",
 		"xo": "^0.60.0"
 	}
 }

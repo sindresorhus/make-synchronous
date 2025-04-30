@@ -1,60 +1,64 @@
-import {Buffer} from 'node:buffer';
-import childProcess from 'node:child_process';
-import v8 from 'node:v8';
-import process from 'node:process';
-import Subsume from 'subsume';
+import {
+	workerData,
+	receiveMessageOnPort,
+	parentPort,
+	Worker,
+} from 'node:worker_threads';
 
-const HUNDRED_MEGABYTES = 1000 * 1000 * 100;
+// Not using `isMainThread` so it can be used in another worker.
+const IS_WORKER_MARK = 'is-make-synchronous-worker';
+const IS_WORKER = workerData?.[IS_WORKER_MARK];
 
-export default function makeSynchronous(function_) {
+function setupWorker(function_) {
+	parentPort.on('message', async ({arguments_, workerPort, semaphore}) => {
+		try {
+			workerPort.postMessage({result: await function_(...arguments_)});
+		} catch (error) {
+			workerPort.postMessage({error});
+		} finally {
+			Atomics.store(semaphore, 0, 1);
+			Atomics.notify(semaphore, 0, 1);
+		}
+	});
+}
+
+function makeSynchronous(function_) {
+	let cache;
+
+	function createWorker() {
+		if (!cache) {
+			const code = `
+				import setupWorker from ${JSON.stringify(import.meta.url)};
+
+				setupWorker(${function_});
+			`;
+
+			const worker = new Worker(code, {
+				eval: true,
+				workerData: {
+					[IS_WORKER_MARK]: true,
+				},
+			});
+			worker.unref();
+
+			const {port1: mainThreadPort, port2: workerPort} = new MessageChannel();
+			mainThreadPort.unref();
+			workerPort.unref();
+
+			cache = {worker, mainThreadPort, workerPort};
+		}
+
+		return cache;
+	}
+
 	return (...arguments_) => {
-		const serializedArguments = v8.serialize(arguments_).toString('hex');
-		const subsume = new Subsume();
+		const {worker, mainThreadPort, workerPort} = createWorker();
+		const semaphore = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT));
 
-		const input = `
-			import v8 from 'node:v8';
-			import Subsume from 'subsume';
+		worker.postMessage({arguments_, semaphore, workerPort}, [workerPort]);
+		Atomics.wait(semaphore, 0, 0);
 
-			const subsume = new Subsume('${subsume.id}');
-
-			const send = value => {
-				const serialized = v8.serialize(value).toString('hex');
-				process.stdout.write(subsume.compose(serialized));
-			};
-
-			try {
-				const arguments_ = v8.deserialize(Buffer.from('${serializedArguments}', 'hex'));
-				const result = await (${function_})(...arguments_);
-				send({result});
-			} catch (error) {
-				send({error});
-			}
-		`;
-
-		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['--input-type=module', '-'], {
-			input,
-			encoding: 'utf8',
-			maxBuffer: HUNDRED_MEGABYTES,
-			env: {
-				...process.env,
-				ELECTRON_RUN_AS_NODE: '1',
-			},
-		});
-
-		if (subprocessError) {
-			throw subprocessError;
-		}
-
-		const {data, rest} = subsume.parse(stdout);
-
-		process.stdout.write(rest);
-		process.stderr.write(stderr);
-
-		if (!data) {
-			return;
-		}
-
-		const {error, result} = v8.deserialize(Buffer.from(data, 'hex'));
+		const {error, result} = receiveMessageOnPort(mainThreadPort).message;
 
 		if (error) {
 			throw error;
@@ -63,3 +67,5 @@ export default function makeSynchronous(function_) {
 		return result;
 	};
 }
+
+export default IS_WORKER ? setupWorker : makeSynchronous;

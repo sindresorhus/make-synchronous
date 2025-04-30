@@ -7,9 +7,9 @@ type ReplaceReturnType<T extends (...arguments_: any) => unknown, NewReturnType>
 /**
 Returns a wrapped version of the given async function or a string representation to a async function which executes synchronously. This means no other code will execute (not even async code) until the given async function is done.
 
-The given function is executed in a worker or subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
+The function is executed in a worker or subprocess, so you cannot access variables or imports from outside its scope. Use `await import(…)` to import dependencies inside the function.
 
-It uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or the V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
+Uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or the V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. Most values are supported — except functions and symbols.
 
 @example
 ```
@@ -25,6 +25,15 @@ const fn = makeSynchronous(async number => {
 
 console.log(fn(2));
 //=> 4
+```
+
+@example
+```
+import makeSynchronous from 'make-synchronous/subprocess';
+
+makeSynchronous(async () => {
+	// Runs in a subprocess.
+});
 ```
 */
 export default function makeSynchronous<T extends AnyAsyncFunction = AnyAsyncFunction>(asyncFunction: T | string): ReplaceReturnType<T, AsyncReturnType<T>>;
