@@ -11,15 +11,25 @@
 		"url": "https://sindresorhus.com"
 	},
 	"type": "module",
-	"exports": "./index.js",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./worker.js"
+		},
+		"./subprocess": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		}
+	},
 	"engines": {
-		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+		"node": ">=20"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
 	},
 	"files": [
 		"index.js",
+		"worker.js",
 		"index.d.ts"
 	],
 	"keywords": [
@@ -32,18 +42,19 @@
 		"deasync",
 		"fiber",
 		"asynchronous",
-		"async"
+		"async",
+		"worker"
 	],
 	"dependencies": {
 		"subsume": "^4.0.0",
-		"type-fest": "^2.3.3"
+		"type-fest": "^4.38.0"
 	},
 	"devDependencies": {
-		"ava": "^3.15.0",
-		"delay": "^5.0.0",
+		"ava": "^6.2.0",
+		"delay": "^6.0.0",
 		"in-range": "^3.0.0",
-		"time-span": "^5.0.0",
-		"tsd": "^0.17.0",
-		"xo": "^0.44.0"
+		"time-span": "^5.1.0",
+		"tsd": "^0.31.2",
+		"xo": "^0.60.0"
 	}
 }

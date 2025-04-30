@@ -4,7 +4,7 @@
 
 **This is the wrong tool for most tasks!** Prefer using async APIs whenever possible.
 
-The benefit of this package over packages like [`deasync`](https://github.com/abbr/deasync) is that this one is not a native Node.js addon (which comes with a lot of problems). Instead, this package executes the given function synchronously in a subprocess.
+The benefit of this package over packages like [`deasync`](https://github.com/abbr/deasync) is that this one is not a native Node.js addon (which comes with a lot of problems). Instead, this package executes the given function synchronously in a [`worker`](https://nodejs.org/api/worker_threads.html) or [`subprocess`](https://nodejs.org/api/child_process.html).
 
 This package works in Node.js only, not the browser.
 
@@ -15,6 +15,8 @@ npm install make-synchronous
 ```
 
 ## Usage
+
+It executes in a worker thread by default:
 
 ```js
 import makeSynchronous from 'make-synchronous';
@@ -31,17 +33,28 @@ console.log(fn(2));
 //=> 4
 ```
 
+Alternatively, it can also run in a subprocess:
+
+```js
+import makeSynchronous from 'make-synchronous/subprocess';
+
+makeSynchronous(async () => {
+	// Runs in `node:child_process`
+});
+```
+
 ## API
 
-### makeSynchronous(asyncFunction)
+### makeSynchronous(asyncFunction | string)
 
-Returns a wrapped version of the given async function which executes synchronously. This means no other code will execute (not even async code) until the given async function is done.
+Returns a wrapped version of the given async function or a string representation to a async function which executes synchronously. This means no other code will execute (not even async code) until the given async function is done.
 
-The given function is executed in a subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
+The given function is executed in a worker or subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
 
-It uses the V8 serialization API to transfer arguments, return values, errors between the subprocess and the current process. It supports most values, but not functions and symbols.
+It uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or the V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
 
 ## Related
 
 - [make-asynchronous](https://github.com/sindresorhus/make-asynchronous) - Make a synchronous function asynchronous by running it in a worker
 - [sleep-synchronously](https://github.com/sindresorhus/sleep-synchronously) - Block the main thread for a given amount of time
+- [make-synchronized](https://github.com/fisker/make-synchronized) - For advanced cases like fully synchronizing an existing module or needing top-level imports
