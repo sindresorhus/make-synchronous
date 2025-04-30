@@ -16,6 +16,8 @@ npm install make-synchronous
 
 ## Usage
 
+It executes in a worker thread by default:
+
 ```js
 import makeSynchronous from 'make-synchronous';
 
@@ -31,7 +33,7 @@ console.log(fn(2));
 //=> 4
 ```
 
-This module executes function in worker by default, alternatively it can also run in subprocess.
+Alternatively, it can also run in a subprocess:
 
 ```js
 import makeSynchronous from 'make-synchronous/subprocess';
@@ -49,7 +51,7 @@ Returns a wrapped version of the given async function or a string representation
 
 The given function is executed in a worker or subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
 
-It uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
+It uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or the V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
 
 ## Related
 
