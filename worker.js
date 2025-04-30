@@ -5,7 +5,7 @@ import {
 	Worker,
 } from 'node:worker_threads';
 
-// Didn't use `isMainThread`, so it can use in another worker
+// Not using `isMainThread` so it can be used in another worker.
 const IS_WORKER_MARK = 'is-make-synchronous-worker';
 const IS_WORKER = workerData?.[IS_WORKER_MARK];
 
