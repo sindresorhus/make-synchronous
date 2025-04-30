@@ -22,13 +22,14 @@
 		}
 	},
 	"engines": {
-		"node": ">=20.0.0"
+		"node": ">=20"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
 	},
 	"files": [
 		"index.js",
+		"worker.js",
 		"index.d.ts"
 	],
 	"keywords": [
@@ -41,7 +42,8 @@
 		"deasync",
 		"fiber",
 		"asynchronous",
-		"async"
+		"async",
+		"worker"
 	],
 	"dependencies": {
 		"subsume": "^4.0.0",
