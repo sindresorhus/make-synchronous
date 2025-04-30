@@ -49,10 +49,10 @@ Returns a wrapped version of the given async function or a string representation
 
 The given function is executed in a worker or subprocess, so you cannot use any variables/imports from outside the scope of the function. You can pass in arguments to the function. To import dependencies, use `await import(…)` in the function body.
 
-It uses the [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
+It uses [`MessagePort#postMessage()`](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) or V8 serialization API to transfer arguments, return values, errors between the worker or subprocess and the current process. It supports most values, but not functions and symbols.
 
 ## Related
 
 - [make-asynchronous](https://github.com/sindresorhus/make-asynchronous) - Make a synchronous function asynchronous by running it in a worker
 - [sleep-synchronously](https://github.com/sindresorhus/sleep-synchronously) - Block the main thread for a given amount of time
-- [make-synchronized](https://github.com/fisker/make-synchronized) - For complex cases, eg: make a existing module fully synchronized or import declaration is needed
+- [make-synchronized](https://github.com/fisker/make-synchronized) - For advanced cases like fully synchronizing an existing module or needing top-level imports
