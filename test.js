@@ -61,4 +61,11 @@ for (const {type, makeSynchronous} of [
 			},
 		);
 	});
+
+	test(`[${type}] Run multiple times`, t => {
+		const identity = makeSynchronous(value => Promise.resolve(value));
+		for (let index = 0; index < 2; index++) {
+			t.is(identity(index), index);
+		}
+	});
 }

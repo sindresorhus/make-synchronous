@@ -10,7 +10,8 @@ const IS_WORKER_MARK = 'is-make-synchronous-worker';
 const IS_WORKER = workerData?.[IS_WORKER_MARK];
 
 function setupWorker(function_) {
-	parentPort.on('message', async ({arguments_, workerPort, semaphore}) => {
+	const {workerPort} = workerData;
+	parentPort.on('message', async ({arguments_, semaphore}) => {
 		try {
 			workerPort.postMessage({result: await function_(...arguments_)});
 		} catch (error) {
@@ -27,6 +28,10 @@ function makeSynchronous(function_) {
 
 	function createWorker() {
 		if (!cache) {
+			const {port1: mainThreadPort, port2: workerPort} = new MessageChannel();
+			mainThreadPort.unref();
+			workerPort.unref();
+
 			const code = `
 				import setupWorker from ${JSON.stringify(import.meta.url)};
 
@@ -36,26 +41,24 @@ function makeSynchronous(function_) {
 			const worker = new Worker(code, {
 				eval: true,
 				workerData: {
+					workerPort,
 					[IS_WORKER_MARK]: true,
 				},
+				transferList: [workerPort],
 			});
 			worker.unref();
 
-			const {port1: mainThreadPort, port2: workerPort} = new MessageChannel();
-			mainThreadPort.unref();
-			workerPort.unref();
-
-			cache = {worker, mainThreadPort, workerPort};
+			cache = {worker, mainThreadPort};
 		}
 
 		return cache;
 	}
 
 	return (...arguments_) => {
-		const {worker, mainThreadPort, workerPort} = createWorker();
+		const {worker, mainThreadPort} = createWorker();
 		const semaphore = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT));
 
-		worker.postMessage({arguments_, semaphore, workerPort}, [workerPort]);
+		worker.postMessage({arguments_, semaphore});
 		Atomics.wait(semaphore, 0, 0);
 
 		const {error, result} = receiveMessageOnPort(mainThreadPort).message;
