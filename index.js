@@ -29,8 +29,8 @@ function makeSynchronous(function_) {
 	function createWorker() {
 		if (!cache) {
 			const {port1: mainThreadPort, port2: workerPort} = new MessageChannel();
-			mainThreadPort.unref();
-			workerPort.unref();
+			mainThreadPort.unref?.();
+			workerPort.unref?.();
 
 			const code = `
 				import setupWorker from ${JSON.stringify(import.meta.url)};
@@ -46,7 +46,7 @@ function makeSynchronous(function_) {
 				},
 				transferList: [workerPort],
 			});
-			worker.unref();
+			worker.unref?.();
 
 			cache = {worker, mainThreadPort};
 		}
