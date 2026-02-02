@@ -31,14 +31,19 @@ export default function makeSynchronous(function_) {
 			}
 		`;
 
+		const env = {...process.env, ELECTRON_RUN_AS_NODE: '1'};
+
+		// Prevent debugger flags from the parent from forcing the child to open a debug port.
+		env.NODE_OPTIONS &&= env.NODE_OPTIONS
+			.split(/\s+/)
+			.filter(option => !/^--(?:inspect|debug)/.test(option))
+			.join(' ');
+
 		const {error: subprocessError, stdout, stderr} = childProcess.spawnSync(process.execPath, ['--input-type=module', '-'], {
 			input,
 			encoding: 'utf8',
 			maxBuffer: HUNDRED_MEGABYTES,
-			env: {
-				...process.env,
-				ELECTRON_RUN_AS_NODE: '1',
-			},
+			env,
 		});
 
 		if (subprocessError) {
