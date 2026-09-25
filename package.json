@@ -5,11 +5,7 @@
 	"license": "MIT",
 	"repository": "sindresorhus/make-synchronous",
 	"funding": "https://github.com/sponsors/sindresorhus",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
-	},
+	"author": "Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)",
 	"type": "module",
 	"exports": {
 		".": {
@@ -23,15 +19,15 @@
 	},
 	"sideEffects": false,
 	"engines": {
-		"node": ">=20"
+		"node": ">=22"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"test": "xo && node --test && tsd"
 	},
 	"files": [
 		"index.js",
-		"subprocess.js",
-		"index.d.ts"
+		"index.d.ts",
+		"subprocess.js"
 	],
 	"keywords": [
 		"function",
@@ -48,14 +44,13 @@
 	],
 	"dependencies": {
 		"subsume": "^4.0.0",
-		"type-fest": "^4.40.1"
+		"type-fest": "^5.10.0"
 	},
 	"devDependencies": {
-		"ava": "^6.2.0",
-		"delay": "^6.0.0",
+		"delay": "^7.0.0",
 		"in-range": "^3.0.0",
 		"time-span": "^5.1.0",
-		"tsd": "^0.32.0",
-		"xo": "^0.60.0"
+		"tsd": "^0.33.0",
+		"xo": "^5.0.1"
 	}
 }
